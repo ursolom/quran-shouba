@@ -1,56 +1,88 @@
-# Welcome to your Expo app 👋
+# Quran Shouba
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Quran application for reading and listening to the Quran with Shouba narration.
 
-## Get started
+## Tasks
 
-1. Install dependencies
+### 1. Home Screen
 
-   ```bash
-   npm install
-   ```
+- [x] Create the main screen.
+- [ ] Add a carousel for Quran pages.
+- [ ] Display one page at a time.
+- [ ] Support swiping between pages.
+- [ ] Make sure the page images work correctly on different screen sizes.
+- [ ] Support RTL.
 
-2. Start the app
+### 2. Quran Pages
 
-   ```bash
-   npx expo start
-   ```
+- [ ] Add all Quran page images.
+- [ ] Track the current page.
+- [ ] Navigate to a specific page.
+- [ ] Save the last opened page.
+- [ ] Open the app on the last opened page.
+- [ ] Optimize image loading and caching.
 
-In the output, you'll find options to open the app in a
+### 3. Audio
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- [ ] Connect each page with its corresponding audio.
+- [ ] Play audio for the current page.
+- [ ] Handle audio when changing pages.
+- [ ] Automatically move to the next page after the audio finishes.
+- [ ] Add play/pause controls.
+- [ ] Add progress control.
+- [ ] Add playback speed.
+- [ ] Add audio caching.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 4. Reciters
 
-## Get a fresh project
+- [ ] Add the main reciters available for Shouba narration.
+- [ ] Add reciter selection.
+- [ ] Save the selected reciter.
+- [ ] Add more reciters later.
 
-When you're ready, run:
+### 5. Search
 
-```bash
-npm run reset-project
-```
+- [ ] Create Quran search.
+- [ ] Search across all Quran verses.
+- [ ] Display search results.
+- [ ] Open the related page from a search result.
+- [ ] Improve Arabic search handling.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 6. Quran Index
 
-### Other setup steps
+- [ ] Create the Quran index.
+- [ ] Display all Surahs.
+- [ ] Show Surah name and number.
+- [ ] Show the number of verses.
+- [ ] Navigate to a Surah.
+- [ ] Add search to the index.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### 7. Settings
 
-## Learn more
+- [ ] Create the settings screen.
+- [ ] Add page navigation settings.
+- [ ] Add volume button navigation.
+- [ ] Add audio settings.
+- [ ] Add reciter settings.
+- [ ] Add reading settings.
 
-To learn more about developing your project with Expo, look at the following resources:
+### 8. User State
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [ ] Save the last reading page.
+- [ ] Save the selected reciter.
+- [ ] Save application settings.
+- [ ] Add bookmarks.
+- [ ] Save recently opened Surahs.
 
-## Join the community
+### 9. Additional Features
 
-Join our community of developers creating universal apps.
+New features will be added here during development as needed.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Current Task
+
+### Home Screen
+
+- [ ] Create the main screen.
+- [ ] Implement the Quran pages carousel.
+- [ ] Display one page at a time.
+- [ ] Implement page navigation.
