@@ -1,5 +1,8 @@
 {
   "expo": {
+    "extra": {
+      "supportsRTL": true
+    },
     "name": "quran-app",
     "slug": "quran-app",
     "version": "1.0.0",

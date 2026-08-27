@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 interface PageCounterProps {
   currentPage: number;
@@ -7,24 +7,10 @@ interface PageCounterProps {
 
 export default function PageCounter({ currentPage, totalPages }: PageCounterProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        {currentPage + 1} / {totalPages}
+    <View className="rounded-2xl bg-black/50 px-3 py-1.5">
+      <Text className="text-sm font-semibold text-white">
+        {currentPage} / {totalPages}
       </Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
-  text: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-});

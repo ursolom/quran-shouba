@@ -1,18 +1,11 @@
 import { useState } from "react";
-import {
-  Modal,
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  Keyboard,
-} from "react-native";
+import { Keyboard, Modal, Pressable, Text, View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 
 interface JumpToPageDialogProps {
   visible: boolean;
   totalPages: number;
-  onJump: (page: number) => void;
+  onJump: (pageIndex: number) => void;
   onClose: () => void;
 }
 
@@ -24,16 +17,16 @@ export default function JumpToPageDialog({
 }: JumpToPageDialogProps) {
   const [input, setInput] = useState("");
 
-  const handleJump = () => {
-    const page = parseInt(input, 10);
-    if (!isNaN(page) && page >= 1 && page <= totalPages) {
+  const handleJump = (): void => {
+    const pageNumber = parseInt(input, 10);
+    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
       Keyboard.dismiss();
-      onJump(page - 1);
+      onJump(pageNumber - 1);
       setInput("");
     }
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     Keyboard.dismiss();
     setInput("");
     onClose();
@@ -41,11 +34,19 @@ export default function JumpToPageDialog({
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <Pressable style={styles.overlay} onPress={handleClose}>
-        <Pressable style={styles.dialog} onPress={(e) => e.stopPropagation()}>
-          <Text style={styles.title}>Jump to Page</Text>
+      <Pressable
+        className="flex-1 items-center justify-center bg-black/50"
+        onPress={handleClose}
+      >
+        <Pressable
+          className="w-[280px] rounded-xl bg-white p-5"
+          onPress={(e) => e.stopPropagation()}
+        >
+          <Text className="mb-4 text-center text-lg font-semibold">
+            Jump to Page
+          </Text>
           <TextInput
-            style={styles.input}
+            className="mb-4 rounded-lg border border-gray-200 p-3 text-center text-base"
             keyboardType="numeric"
             value={input}
             onChangeText={setInput}
@@ -54,17 +55,15 @@ export default function JumpToPageDialog({
             autoFocus
             onSubmitEditing={handleJump}
           />
-          <View style={styles.buttons}>
-            <Pressable style={styles.button} onPress={handleClose}>
-              <Text style={styles.buttonText}>Cancel</Text>
+          <View className="flex-row justify-end gap-2">
+            <Pressable className="rounded-lg px-4 py-2" onPress={handleClose}>
+              <Text className="text-base text-gray-500">Cancel</Text>
             </Pressable>
             <Pressable
-              style={[styles.button, styles.primaryButton]}
+              className="rounded-lg bg-blue-500 px-4 py-2"
               onPress={handleJump}
             >
-              <Text style={[styles.buttonText, styles.primaryButtonText]}>
-                Go
-              </Text>
+              <Text className="text-base text-white">Go</Text>
             </Pressable>
           </View>
         </Pressable>
@@ -72,53 +71,3 @@ export default function JumpToPageDialog({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  dialog: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 20,
-    width: 280,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 16,
-  },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: 8,
-  },
-  button: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: "#666",
-  },
-  primaryButton: {
-    backgroundColor: "#007AFF",
-  },
-  primaryButtonText: {
-    color: "#fff",
-  },
-});

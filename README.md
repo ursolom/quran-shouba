@@ -7,20 +7,22 @@ Quran application for reading and listening to the Quran with Shouba narration.
 ### 1. Home Screen
 
 - [x] Create the main screen.
-- [ ] Add a carousel for Quran pages.
-- [ ] Display one page at a time.
-- [ ] Support swiping between pages.
-- [ ] Make sure the page images work correctly on different screen sizes.
-- [ ] Support RTL.
+- [x] Add a carousel for Quran pages.
+- [x] Display one page at a time.
+- [x] Support swiping between pages.
+- [x] Make sure the page images work correctly on different screen sizes.
+- [x] Support RTL.
+- [x] Add top header with navigation buttons.
+- [x] Add bottom overlay with controls and slider.
 
 ### 2. Quran Pages
 
-- [ ] Add all Quran page images.
-- [ ] Track the current page.
-- [ ] Navigate to a specific page.
-- [ ] Save the last opened page.
-- [ ] Open the app on the last opened page.
-- [ ] Optimize image loading and caching.
+- [x] Add all Quran page images (605 pages).
+- [x] Track the current page.
+- [x] Navigate to a specific page.
+- [x] Save the last opened page (SQLite).
+- [x] Open the app on the last opened page.
+- [x] Optimize image loading and caching.
 
 ### 3. Audio
 
@@ -68,21 +70,12 @@ Quran application for reading and listening to the Quran with Shouba narration.
 
 ### 8. User State
 
-- [ ] Save the last reading page.
+- [x] Save the last reading page.
 - [ ] Save the selected reciter.
 - [ ] Save application settings.
-- [ ] Add bookmarks.
+- [x] Add bookmarks.
 - [ ] Save recently opened Surahs.
 
 ### 9. Additional Features
 
 New features will be added here during development as needed.
-
-## Current Task
-
-### Home Screen
-
-- [ ] Create the main screen.
-- [ ] Implement the Quran pages carousel.
-- [ ] Display one page at a time.
-- [ ] Implement page navigation.

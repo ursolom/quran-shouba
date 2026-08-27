@@ -1,16 +1,17 @@
 import "@/global.css";
 import { StatusBar, View } from "react-native";
-import QuranPageCarousel from "@/components/QuranPageCarousel";
+import QuranReader from "@/components/quran/QuranReader";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
   return (
-    <View className="flex-1 bg-quran-bg">
+    <SafeAreaView style={{ flex: 1 }} className="bg-quran-bg">
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <QuranPageCarousel />
-    </View>
+      <QuranReader />
+    </SafeAreaView>
   );
 }
