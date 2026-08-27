@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { View, Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useReaderStore } from "@/store/reader";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -10,51 +10,21 @@ export default function ReaderHeader() {
 
   if (!showOverlay) return null;
 
-  const btnStyle = {
-    backgroundColor: "#0F9D587A", // bright green matching screenshot
-    width: 44,
-    height: 44,
-    justifyContent: "center" as const,
-    alignItems: "center" as const,
-    // Leaf shape
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 22,
-    borderBottomLeftRadius: 22,
-    borderBottomRightRadius: 22,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  };
-
   return (
     <SafeAreaView
       edges={["top"]}
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        pointerEvents: "box-none",
-      }}
+      className="absolute top-0 left-0 right-0 bg-quran-bg border-b border-white/20 px-5 py-4"
+      style={{ backgroundColor: "rgba(92, 123, 55, 0.95)" }}
+      pointerEvents="box-none"
     >
-      <View
-        style={{
-          flexDirection: "row-reverse", // RTL
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingHorizontal: 20,
-          paddingTop: 10,
-        }}
-      >
+      <View className="flex-row-reverse justify-between items-center bg-[#0F9D587A] rounded-b-2xl border border-white/20 px-4 py-3">
         {/* Right (Menu) */}
-        <Pressable style={btnStyle}>
+        <Pressable className="w-11 h-11 items-center justify-center bg-[#0F9D587A] rounded-t-sm rounded-b-2xl">
           <Feather name="menu" size={20} color="#fff" />
         </Pressable>
 
         {/* Middle (Navigate) */}
-        <Pressable style={btnStyle}>
+        <Pressable className="w-11 h-11 items-center justify-center bg-[#0F9D587A] rounded-t-sm rounded-b-2xl">
           <Ionicons
             name="navigate"
             size={20}
@@ -64,7 +34,7 @@ export default function ReaderHeader() {
         </Pressable>
 
         {/* Left (Search) */}
-        <Pressable style={btnStyle}>
+        <Pressable className="w-11 h-11 items-center justify-center bg-[#0F9D587A] rounded-t-sm rounded-b-2xl">
           <Feather name="search" size={20} color="#fff" />
         </Pressable>
       </View>
