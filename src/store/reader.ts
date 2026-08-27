@@ -9,21 +9,23 @@ let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
 async function getDb(): Promise<SQLite.SQLiteDatabase> {
   if (!dbPromise) {
-    dbPromise = SQLite.openDatabaseAsync("quran_settings.db").then(async (d) => {
-      await d.execAsync(`
+    dbPromise = SQLite.openDatabaseAsync("quran_settings.db").then(
+      async (d) => {
+        await d.execAsync(`
         CREATE TABLE IF NOT EXISTS settings (
           key TEXT PRIMARY KEY,
           value TEXT
         );
       `);
-      return d;
-    });
+        return d;
+      },
+    );
   }
   return dbPromise;
 }
 
-function createSQLiteStorage() {
-  return createJSONStorage(() => ({
+function createDebouncedSQLiteStorage() {
+  const baseStorage = createJSONStorage(() => ({
     getItem: async (name: string): Promise<string | null> => {
       try {
         const database = await getDb();
@@ -37,28 +39,50 @@ function createSQLiteStorage() {
       }
     },
     setItem: async (name: string, value: string): Promise<void> => {
-      try {
-        const database = await getDb();
-        await database.runAsync(
-          "INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)",
-          [name, value],
-        );
-      } catch (error) {
-        console.warn("Failed to save reader state:", error);
-      }
+      // The actual write is debounced; we schedule it.
+      scheduleWrite(name, value);
     },
     removeItem: async (name: string): Promise<void> => {
       try {
         const database = await getDb();
-        await database.runAsync(
-          "DELETE FROM settings WHERE key = ?",
-          [name],
-        );
+        await database.runAsync("DELETE FROM settings WHERE key = ?", [name]);
       } catch (error) {
         console.warn("Failed to remove reader state:", error);
       }
     },
   }));
+
+  // Debounce timer
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  let pendingKey: string | null = null;
+  let pendingValue: string | null = null;
+
+  const scheduleWrite = (key: string, value: string) => {
+    pendingKey = key;
+    pendingValue = value;
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+    debounceTimer = setTimeout(async () => {
+      if (pendingKey && pendingValue !== null) {
+        try {
+          const database = await getDb();
+          await database.runAsync(
+            "INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)",
+            [pendingKey, pendingValue],
+          );
+        } catch (error) {
+          console.warn("Failed to save reader state:", error);
+        } finally {
+          pendingKey = null;
+          pendingValue = null;
+          debounceTimer = null;
+        }
+      }
+    }, 500);
+  };
+
+  return baseStorage;
 }
 
 interface PersistedData {
@@ -102,7 +126,7 @@ export const useReaderStore = create<ReaderState>()(
     }),
     {
       name: "quran-reader",
-      storage: createSQLiteStorage(),
+      storage: createDebouncedSQLiteStorage(),
       partialize: (state): PersistedData => ({
         currentPageIndex: state.currentPageIndex,
         bookmarks: state.bookmarks,

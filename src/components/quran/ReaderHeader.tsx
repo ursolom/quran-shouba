@@ -1,41 +1,74 @@
-import { useCallback } from "react";
-import { Pressable, View } from "react-native";
+import { View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useReaderStore } from "@/store/reader";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
+import { colors } from "@/constants/colors";
 
 export default function ReaderHeader() {
-  const showOverlay = useReaderStore(useCallback((s) => s.showOverlay, []));
+  const showOverlay = useReaderStore((s) => s.showOverlay);
 
   if (!showOverlay) return null;
+
+  const btnStyle = {
+    width: 44,
+    height: 44,
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+
+    backgroundColor: `rgba(15, 157, 88, ${colors.opacity.button})`,
+
+    borderRadius: 22,
+
+    elevation: 4,
+    shadowColor: colors.black,
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    borderStartStartRadius: 0,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  };
 
   return (
     <SafeAreaView
       edges={["top"]}
-      className="absolute top-0 left-0 right-0 bg-quran-bg border-b border-white/20 px-5 py-4"
-      style={{ backgroundColor: "rgba(92, 123, 55, 0.95)" }}
       pointerEvents="box-none"
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 999,
+      }}
     >
-      <View className="flex-row-reverse justify-between items-center bg-[#0F9D587A] rounded-b-2xl border border-white/20 px-4 py-3">
-        {/* Right (Menu) */}
-        <Pressable className="w-11 h-11 items-center justify-center bg-[#0F9D587A] rounded-t-sm rounded-b-2xl">
-          <Feather name="menu" size={20} color="#fff" />
+      <View
+        style={{
+          width: "100%",
+          backgroundColor: `rgba(92, 123, 55, ${colors.opacity.header})`,
+
+          flexDirection: "row-reverse",
+          alignItems: "center",
+          justifyContent: "space-between",
+
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+
+          borderBottomLeftRadius: 24,
+          borderBottomRightRadius: 24,
+        }}
+      >
+        <Pressable style={btnStyle}>
+          <Feather name="menu" size={20} color={colors.white} />
         </Pressable>
 
-        {/* Middle (Navigate) */}
-        <Pressable className="w-11 h-11 items-center justify-center bg-[#0F9D587A] rounded-t-sm rounded-b-2xl">
-          <Ionicons
-            name="navigate"
-            size={20}
-            color="#fff"
-            style={{ transform: [{ rotate: "45deg" }, { translateX: -2 }] }}
-          />
+        <Pressable style={btnStyle}>
+          <Ionicons name="navigate" size={20} color={colors.white} />
         </Pressable>
 
-        {/* Left (Search) */}
-        <Pressable className="w-11 h-11 items-center justify-center bg-[#0F9D587A] rounded-t-sm rounded-b-2xl">
-          <Feather name="search" size={20} color="#fff" />
+        <Pressable style={btnStyle}>
+          <Feather name="search" size={20} color={colors.white} />
         </Pressable>
       </View>
     </SafeAreaView>

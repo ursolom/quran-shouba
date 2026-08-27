@@ -1,8 +1,5 @@
 {
   "expo": {
-    "extra": {
-      "supportsRTL": true
-    },
     "name": "quran-app",
     "slug": "quran-app",
     "version": "1.0.0",
@@ -11,9 +8,11 @@
     "scheme": "quranapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "supportsRtl": true
     },
     "android": {
+      "supportsRtl": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -46,6 +45,11 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "expo-localization": {
+        "supportsRtl": true
+      }
     }
   }
 }

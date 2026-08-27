@@ -1,6 +1,7 @@
-import "@/global.css";
-import { StatusBar, View } from "react-native";
 import QuranReader from "@/components/quran/QuranReader";
+import ReaderHeader from "@/components/quran/ReaderHeader";
+import "@/global.css";
+import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
@@ -11,6 +12,8 @@ export default function App() {
         backgroundColor="transparent"
         barStyle="dark-content"
       />
+      <ReaderHeader />
+
       <QuranReader />
     </SafeAreaView>
   );

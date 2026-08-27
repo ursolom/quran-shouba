@@ -1,14 +1,14 @@
 import { memo } from "react";
-import { View, useWindowDimensions } from "react-native";
+import { View } from "react-native";
 import { Image } from "expo-image";
 
 interface QuranPageProps {
   source: number;
+  width: number;
+  height: number;
 }
 
-function QuranPage({ source }: QuranPageProps) {
-  const { width, height } = useWindowDimensions();
-
+function QuranPage({ source, width, height }: QuranPageProps) {
   return (
     <View style={{ width, height }}>
       <Image
@@ -23,7 +23,4 @@ function QuranPage({ source }: QuranPageProps) {
   );
 }
 
-export default memo(
-  QuranPage,
-  (prevProps, nextProps) => prevProps.source === nextProps.source,
-);
+export default memo(QuranPage);

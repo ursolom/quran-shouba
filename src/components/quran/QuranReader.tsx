@@ -5,18 +5,17 @@ import { quranPages } from "@/data/images";
 import { useReaderStore, TOTAL_PAGES } from "@/store/reader";
 import QuranPage from "./QuranPage";
 import ReaderOverlay from "./ReaderOverlay";
-import ReaderHeader from "./ReaderHeader";
 
 interface QuranReaderProps {
   initialPage?: number;
 }
 
 export default function QuranReader({ initialPage }: QuranReaderProps) {
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
 
   const loaded = useReaderStore(useCallback((s) => s.loaded, []));
   const currentPageIndex = useReaderStore(
-    useCallback((s) => s.currentPageIndex, []),
+    useCallback((s) => s.currentPageIndex, [])
   );
   const goToPage = useReaderStore(useCallback((s) => s.goToPage, []));
   const toggleOverlay = useReaderStore(useCallback((s) => s.toggleOverlay, []));
@@ -33,55 +32,51 @@ export default function QuranReader({ initialPage }: QuranReaderProps) {
     return 0;
   }, [initialPage, currentPageIndex]);
 
-  const handlePageChange = useCallback(
-    (pageNumber: number) => {
-      if (pageNumber !== currentPageIndex) {
-        goToPage(pageNumber);
-      }
-    },
-    [currentPageIndex, goToPage],
-  );
-
   const handleJumpToPage = useCallback(
     (targetPageIndex: number) => {
-      const roundedWidth = Math.round(width);
-      const offset = targetPageIndex * roundedWidth;
-      flatListRef.current?.scrollToOffset({ offset, animated: false });
+      flatListRef.current?.scrollToIndex({
+        index: targetPageIndex,
+        animated: false,
+      });
       goToPage(targetPageIndex);
     },
-    [goToPage, width],
+    [goToPage],
   );
 
+  const goToPageRef = useRef(goToPage);
+  goToPageRef.current = goToPage;
+
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {
+      if (viewableItems.length > 0 && viewableItems[0].index !== null) {
+        goToPageRef.current(viewableItems[0].index);
+      }
+    }
+  ).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current;
+
   const getItemLayout = useCallback(
-    (_: unknown, index: number) => {
-      const roundedWidth = Math.round(width);
-      return {
-        length: roundedWidth,
-        offset: roundedWidth * index,
-        index,
-      };
-    },
-    [width],
+    (_: unknown, index: number) => ({
+      length: width,
+      offset: width * index,
+      index,
+    }),
+    [width]
   );
 
   const keyExtractor = useCallback(
     (_: unknown, index: number) => `quran-page-${index}`,
-    [],
+    []
   );
 
   const renderItem = useCallback(
-    ({ item }: { item: number }) => <QuranPage source={item} />,
-    [],
-  );
-
-  const handleMomentumScrollEnd = useCallback(
-    (e: { nativeEvent: { contentOffset: { x: number } } }) => {
-      const index = Math.round(
-        e.nativeEvent.contentOffset.x / Math.round(width),
-      );
-      handlePageChange(index);
-    },
-    [width, handlePageChange],
+    ({ item }: { item: number }) => (
+      <QuranPage source={item} width={width} height={height} />
+    ),
+    [width, height]
   );
 
   const tapGesture = Gesture.Tap()
@@ -93,11 +88,11 @@ export default function QuranReader({ initialPage }: QuranReaderProps) {
     .runOnJS(true);
 
   if (!loaded) {
-    return <View style={{ flex: 1, backgroundColor: "#000" }} />;
+    return <View className="flex-1 bg-quran-bg" />;
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#000" }}>
+    <View className="flex-1 bg-quran-bg">
       <GestureDetector gesture={tapGesture}>
         <FlatList
           ref={flatListRef}
@@ -117,11 +112,10 @@ export default function QuranReader({ initialPage }: QuranReaderProps) {
           getItemLayout={getItemLayout}
           keyExtractor={keyExtractor}
           renderItem={renderItem}
-          onMomentumScrollEnd={handleMomentumScrollEnd}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
         />
       </GestureDetector>
-
-      <ReaderHeader />
       <ReaderOverlay onJumpToPage={handleJumpToPage} />
     </View>
   );

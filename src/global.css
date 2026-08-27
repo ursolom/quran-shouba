@@ -1,9 +1,18 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css";
-
 @import "nativewind/theme";
 
 @theme {
-  --color-quran-bg: #FFFBEF;
+  --color-quran-bg: #fffbef;
+
+  --color-quran-primary: #5c7b37;
+  --color-quran-primary-95: rgb(92 123 55 / 95%);
+  --color-quran-primary-48: rgb(15 157 88 / 48%);
+
+  --color-quran-white: #ffffff;
+  --color-quran-gold: #ffd700;
+
+  --color-quran-border: rgb(255 255 255 / 20%);
+  --color-quran-surface: rgb(255 255 255 / 10%);
 }
