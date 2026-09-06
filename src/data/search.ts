@@ -1,7 +1,6 @@
 //------------------ Juz Data ---------------------
 export const Juz: [number, number][] = [
   // {sura, aya}
-  [0, 0],
   [1, 1],
   [2, 142],
   [2, 253],
@@ -39,7 +38,6 @@ export const Juz: [number, number][] = [
 
 export const HizbQaurter: [number, number][] = [
   // {sura, aya}
-  [0, 0],
   [1, 1],
   [2, 26],
   [2, 44],
@@ -299,7 +297,6 @@ export const Manzil: [number, number][] = [
 //------------------ Ruku Data ---------------------
 
 export const Ruku: [number, number][] = [
-  [0, 0],
   [1, 1],
   [2, 1],
   [2, 8],
@@ -862,7 +859,6 @@ export const Ruku: [number, number][] = [
 
 export const Page: [number, number][] = [
   // {sura, aya}
-  [0, 0],
   [1, 1],
   [2, 1],
   [2, 6],
@@ -1474,7 +1470,6 @@ export const Page: [number, number][] = [
 
 export const Sajda: [number, number, string][] = [
   // {sura, aya, type}
-  [0, 0, "0"],
   [7, 206, "recommended"],
   [13, 15, "recommended"],
   [16, 50, "recommended"],

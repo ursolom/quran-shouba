@@ -1,11 +1,11 @@
-// components/ReaderOverlay/useAudioLogic.ts
-
 import { useCallback, useEffect, useRef } from "react";
 
 import {
   createAudioPlayer,
   setAudioModeAsync,
+  requestNotificationPermissionsAsync,
   type AudioPlayer,
+  type AudioMetadata,
 } from "expo-audio";
 
 import { useAudioStore } from "@/store/audio";
@@ -15,6 +15,7 @@ import {
 } from "@/store/reader";
 import { reciters } from "@/data/reciters";
 import { getOrDownloadAudio } from "@/utils/audioCache";
+import { getPageMetadata } from "@/data/metadata";
 
 export function useAudioLogic() {
   const playerRef = useRef<AudioPlayer | null>(null);
@@ -58,10 +59,18 @@ export function useAudioLogic() {
     speedRef.current = speed;
   }, [speed]);
 
+  /**
+   * Configure audio session for background playback
+   * and request notification permission on Android.
+   */
   useEffect(() => {
     void setAudioModeAsync({
       playsInSilentMode: true,
+      shouldPlayInBackground: true,
+      interruptionMode: "doNotMix",
     });
+
+    void requestNotificationPermissionsAsync().catch(() => {});
   }, []);
 
   const getAudioDetails = useCallback(
@@ -88,10 +97,37 @@ export function useAudioLogic() {
     [],
   );
 
+  /**
+   * Build lock screen metadata from page index and reciter.
+   */
+  const buildMetadata = useCallback(
+    (pageIndex: number): AudioMetadata => {
+      const reciter =
+        reciters.find((r) => r.id === selectedReciterId) ||
+        reciters[0];
+
+      const { surahName } = getPageMetadata(pageIndex);
+
+      return {
+        title: `سورة ${surahName} - الصفحة ${pageIndex + 1}`,
+        artist: reciter.name,
+        albumTitle: "القرآن الكريم",
+        artworkUrl: reciter.image || undefined,
+      };
+    },
+    [selectedReciterId],
+  );
+
   const releasePlayer = useCallback(() => {
     if (!playerRef.current) {
       playingPageRef.current = null;
       return;
+    }
+
+    try {
+      playerRef.current.clearLockScreenControls();
+    } catch {
+      // Ignore.
     }
 
     try {
@@ -106,8 +142,6 @@ export function useAudioLogic() {
 
   /**
    * Download/check local cache.
-   *
-   * This function does NOTHING until explicitly called.
    */
   const prepareAudio = useCallback(
     async (
@@ -155,7 +189,7 @@ export function useAudioLogic() {
     );
 
   /**
-   * Create local player.
+   * Create local player with lock screen controls.
    */
   const createLocalPlayer = useCallback(
     (
@@ -173,6 +207,14 @@ export function useAudioLogic() {
 
       player.shouldCorrectPitch = true;
       player.setPlaybackRate(speedRef.current);
+
+      /**
+       * Activate lock screen controls with metadata.
+       */
+      player.setActiveForLockScreen(
+        true,
+        buildMetadata(pageIndex),
+      );
 
       player.addListener(
         "playbackStatusUpdate",
@@ -207,21 +249,10 @@ export function useAudioLogic() {
             if (finishedPage === null) {
               setPlaying(false);
               isPlayingRef.current = false;
+              player.clearLockScreenControls();
               return;
             }
 
-            /**
-             * If the reader stayed on the same page:
-             *
-             * Page 8 audio finished
-             * → go to Page 9
-             *
-             * If the user manually moved to another page:
-             *
-             * Audio Page 8
-             * Reader Page 9
-             * → continue with Page 9
-             */
             const readerPage =
               currentPageRef.current;
 
@@ -233,14 +264,20 @@ export function useAudioLogic() {
             if (nextPage >= TOTAL_PAGES) {
               setPlaying(false);
               isPlayingRef.current = false;
+              player.clearLockScreenControls();
               return;
             }
 
             goToPage(nextPage);
 
             /**
-             * Continue playback automatically.
+             * Update lock screen metadata for the new page
+             * before playback continues.
              */
+            player.updateLockScreenMetadata(
+              buildMetadata(nextPage),
+            );
+
             void playSpecificPageRef.current(
               nextPage,
             );
@@ -251,6 +288,7 @@ export function useAudioLogic() {
       return player;
     },
     [
+      buildMetadata,
       goToPage,
       releasePlayer,
       setCurrentTime,
@@ -316,22 +354,14 @@ export function useAudioLogic() {
   }, [playSpecificPage]);
 
   /**
-   * IMPORTANT:
-   *
    * Page changes while playing:
-   *
-   * - DON'T stop old audio
-   * - DON'T replace old player
-   * - DOWNLOAD NEW PAGE in background
+   * preload next page in background.
    */
   useEffect(() => {
     if (!isPlayingRef.current) {
       return;
     }
 
-    /**
-     * Already playing this page.
-     */
     if (
       playingPageRef.current === currentPageIndex
     ) {
@@ -342,11 +372,6 @@ export function useAudioLogic() {
 
     const preload = async () => {
       try {
-        /**
-         * Don't set isLoading here.
-         *
-         * Current audio must keep playing normally.
-         */
         await prepareAudio(
           currentPageIndex,
           true,
@@ -375,6 +400,26 @@ export function useAudioLogic() {
     prepareAudio,
     setDownloadProgress,
   ]);
+
+  /**
+   * Update lock screen metadata when page or reciter
+   * changes while playing (without restarting audio).
+   */
+  useEffect(() => {
+    if (!isPlayingRef.current) {
+      return;
+    }
+
+    const player = playerRef.current;
+
+    if (!player) {
+      return;
+    }
+
+    player.updateLockScreenMetadata(
+      buildMetadata(currentPageIndex),
+    );
+  }, [currentPageIndex, buildMetadata]);
 
   /**
    * If NOT playing and user changes page,
@@ -437,12 +482,20 @@ export function useAudioLogic() {
 
     /**
      * RESUME
+     *
+     * Re-activate lock screen with fresh metadata.
      */
+    player.setActiveForLockScreen(
+      true,
+      buildMetadata(currentPageIndex),
+    );
+
     player.play();
 
     isPlayingRef.current = true;
     setPlaying(true);
   }, [
+    buildMetadata,
     currentPageIndex,
     playSpecificPage,
     setPlaying,
@@ -451,7 +504,8 @@ export function useAudioLogic() {
   /**
    * STOP
    *
-   * Completely stops and removes the player.
+   * Completely stops, removes player, and clears
+   * lock screen controls.
    */
   const stopPlayback = useCallback(() => {
     if (playerRef.current) {

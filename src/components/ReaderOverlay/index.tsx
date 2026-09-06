@@ -18,7 +18,6 @@ export default function ReaderOverlay({ onJumpToPage }: ReaderOverlayProps) {
   const showOverlay = useReaderStore((s) => s.showOverlay);
   const [showJumpDialog, setShowJumpDialog] = useState(false);
 
-  // استدعاء المنطق الداخلي (بدون التسبب في re-renders مستمرة للواجهة)
   const { togglePlay, stopPlayback, changeSpeed, seekTo } = useAudioLogic();
 
   if (!showOverlay) return null;

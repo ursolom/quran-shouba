@@ -26,14 +26,13 @@ export const AudioControls = React.memo(
     const currentReciter =
       reciters.find((r) => r.id === selectedReciterId) || reciters[0];
 
-    // تحريك الصورة بـ Reanimated لأداء أقوى
     const rotation = useSharedValue(0);
 
     useEffect(() => {
       if (isPlaying) {
         rotation.value = withRepeat(
           withTiming(360, { duration: 4000, easing: Easing.linear }),
-          -1, // Loop infinitely
+          -1, 
         );
       } else {
         cancelAnimation(rotation);
@@ -68,11 +67,9 @@ export const AudioControls = React.memo(
         >
           <Reanimated.Image
             source={
-              typeof currentReciter.image === "number"
-                ? currentReciter.image
-                : currentReciter.image
-                  ? { uri: currentReciter.image }
-                  : require("@/assets/drawable/qari1.png")
+              currentReciter.image
+                ? { uri: currentReciter.image }
+                : { uri: "https://i.pravatar.cc/100" }
             }
             style={[
               { width: 40, height: 40, borderRadius: 20 },

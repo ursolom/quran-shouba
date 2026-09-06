@@ -7,7 +7,7 @@ export interface Reciter {
   // true: page numbers are zero-padded to 3 digits (001–604)
   // false: page numbers are plain numbers (1–604)
   padded: boolean;
-  image?: string; // URL or local asset for the reciter's photo
+  image?: string; // URL for the reciter's photo
 }
 
 export const reciters: Reciter[] = [
@@ -17,7 +17,7 @@ export const reciters: Reciter[] = [
     baseUrl:
       "https://archive.org/download/abd-alrasheed--soofy-rewayt-sho3bah-3n-3aasem---604-part-full-quran-604-page--/",
     padded: false,
-    image: require("@/assets/drawable/qari1.png"), // if using local assets
+    image: "https://i.pravatar.cc/100",
   },
 ];
 

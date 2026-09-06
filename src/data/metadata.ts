@@ -50,32 +50,25 @@ function findSurahIndex(page: number): number {
   return result;
 }
 
-// ---------- Public API ----------
 export function getPageMetadata(pageIndex: number): PageMetadata {
-  if (pageIndex === 0) {
-    return {
-      surahName: "الغلاف",
-      juzNumber: 0,
-      pageNumber: 0,
-    };
-  }
-
-  if (pageIndex < 0 || pageIndex >= 605) {
+  if (pageIndex < 0 || pageIndex >= 604) {
     return {
       surahName: "غير معروف",
       juzNumber: 1,
-      pageNumber: pageIndex,
+      pageNumber: pageIndex + 1,
     };
   }
 
-  const surahIdx = findSurahIndex(pageIndex);
+  const pageNumber = pageIndex + 1;
+
+  const surahIdx = findSurahIndex(pageNumber);
   const surah = surahs[surahIdx];
   const parts = surahPartsList[surahIdx];
 
-  // Find the exact juz (part) that contains this page
   let juzNumber = 1;
+
   for (const p of parts) {
-    if (pageIndex >= p.startPage && pageIndex <= p.endPage) {
+    if (pageNumber >= p.startPage && pageNumber <= p.endPage) {
       juzNumber = p.part;
       break;
     }
@@ -84,6 +77,6 @@ export function getPageMetadata(pageIndex: number): PageMetadata {
   return {
     surahName: surah.name,
     juzNumber,
-    pageNumber: pageIndex,
+    pageNumber,
   };
 }

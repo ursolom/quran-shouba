@@ -1,5 +1,4 @@
 export const quranPages = [
-  require("@/assets/drawable/quran-images/p_000.webp"),
   require("@/assets/drawable/quran-images/p_001.webp"),
   require("@/assets/drawable/quran-images/p_002.webp"),
   require("@/assets/drawable/quran-images/p_003.webp"),
