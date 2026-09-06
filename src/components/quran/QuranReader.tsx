@@ -4,7 +4,7 @@ import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { quranPages } from "@/data/images";
 import { useReaderStore, TOTAL_PAGES } from "@/store/reader";
 import QuranPage from "./QuranPage";
-import ReaderOverlay from "./ReaderOverlay";
+import ReaderOverlay from "../ReaderOverlay";
 
 interface QuranReaderProps {
   initialPage?: number;
